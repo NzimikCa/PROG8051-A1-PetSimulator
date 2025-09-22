@@ -13,70 +13,90 @@ namespace Assignment1
             //let user input and choose the type of pet
         type:
             Console.WriteLine("Please choose a type of pet: \n1. Cat \n2. Dog \n3. Rabbit");
+            Console.WriteLine();
 
             Console.Write("User Input: ");
             int userInput = int.Parse(Console.ReadLine());
+            Console.WriteLine();
             string petName;
             // based on user input, display message to choose pet's name
             switch (userInput)
             {
                 case 1:
-                    Console.WriteLine("You've chosen a Cat. What would you like to name your pet?");
+                    Console.Write("You've chosen a Cat. What would you like to name your pet? ");
                     petName = Console.ReadLine();
                     break;
                 case 2:
-                    Console.WriteLine("You've chosen a Dog. What would you like to name your pet?");
+                    Console.Write("You've chosen a Dog. What would you like to name your pet? ");
                     petName = Console.ReadLine();
                     break;
                 case 3:
-                    Console.WriteLine("You've chosen a Rabbit. What would you like to name your pet?");
+                    Console.Write("You've chosen a Rabbit. What would you like to name your pet? ");
                     petName = Console.ReadLine();
                     break;
                 default:
-                    Console.WriteLine("You have selected an invalid type of pet!");
+                    Console.Write("You have selected an invalid type of pet! ");
                     goto type;
             }
+            Console.WriteLine();
             Console.WriteLine("Welcome, {0}! Let's take good care of him.", petName);
 
             //declare and initialize values for pet's status
-            int hunger = 5;
-            int happiness = 5;
-            int health = 8;
+            int hunger = 5;//low hunger level (0) means dog is very hungry and 10 means dog is not hungry and is full
+            int happiness = 5;//low happiness level (0) means dog is sad, and 10 means dog is at his happiest
+            int health = 8;//low health level (0) means dog has no energy, and 10 means dog is full of energy
 
-        //display main menu
         mainMenu:
+            //consequences logic for neglect - too hungry, no rest, too unhappy
+            //warning message bases on pet's status
+            Console.WriteLine();
+            if (hunger <= 2) Console.WriteLine("WARNING! {0} is feeling extremely hungry. Be sure to feed him.", petName);
+            if (happiness <= 2) Console.WriteLine("WARNING! {0} is feeling sad. Be sure to play with him.", petName);
+            if (health <= 2) Console.WriteLine("WARNING! {0} is unwell. Be sure to feed him and make him rest.", petName);
+            if (hunger >= 9) Console.WriteLine("NOTICE: {0} is very full. Maybe skip feeding for now.", petName);
+            if (happiness >= 9) Console.WriteLine("NOTICE: {0} is extremely happy and energetic!", petName);
+            if (health >= 9) Console.WriteLine("NOTICE: {0} is in excellent health!", petName);
+            Console.WriteLine();
+
+            //display main menu
             Console.WriteLine("Main Menu:\n1. Feed " + petName + ".\n2. Play with " + petName + ".\n3. Let " + petName + " Rest.\n4. Check " + petName + "'s Status\n5. Exit");
+            Console.WriteLine();
+
             //get user input from main menu
             Console.Write("User Input: ");
             int menuInput = int.Parse(Console.ReadLine());
-            
-            //display actions based on the user input selection from main menu
+            Console.WriteLine();
+
+            //display actions and status based on the user input selection from main menu
             switch (menuInput)
             {
                 case 1:
                     Console.WriteLine("You fed {0}. His hunger decreases, and health improves slightly.", petName);
-                    if (hunger > 0) hunger--;
-                    health++;
+                    if (hunger < 10) hunger++;
+                    if (health < 10) health++;
                     goto mainMenu;
                 case 2:
-                    Console.WriteLine("You played with {0}. His happiness increases, and hunger increases slightly", petName);
-                    hunger++;
-                    happiness++;
+                    if (hunger <= 1)
+                    {
+                        Console.WriteLine($"{petName} is too hungry to play! Feed them first.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"You played with {petName}. Happiness increases but hunger rises.");
+                        if (happiness < 10) happiness++;
+                        if (hunger > 0) hunger--;
+                    }
                     goto mainMenu;
                 case 3:
                     Console.WriteLine("Let {0} rest. His health improves, and happiness decreases slightly", petName);
-                    health++;
-                    happiness--;
+                    if (health < 10) health++;
+                    if (happiness > 0) happiness--;
                     goto mainMenu;
                 case 4:
                     Console.WriteLine("{0}'s Status:\n- Hunger: {1}\n- Happiness: {2}\n -Health: {3}\n", petName, hunger, happiness, health);
-                    hunger++;
-                    happiness++;
                     goto mainMenu;
                 case 5:
                     Console.WriteLine("Thank you for playing with {0}. Goodbye!", petName);
-                    hunger++;
-                    happiness++;
                     break;
                 default:
                     Console.WriteLine("Please select valid option from the menu. ");
@@ -84,10 +104,6 @@ namespace Assignment1
             }
 
             //time-based change - simulate the passage of time where each action represents passage of 1 hr
-
-            //consequences logic for neglect - too hungry, no rest, too unhappy
-            //warning message bases on pet's status
-
         }
     }
 }
