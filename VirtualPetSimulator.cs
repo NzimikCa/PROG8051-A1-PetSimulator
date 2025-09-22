@@ -45,6 +45,7 @@ namespace Assignment1
             int hunger = 5;//low hunger level (0) means dog is very hungry and 10 means dog is not hungry and is full
             int happiness = 5;//low happiness level (0) means dog is sad, and 10 means dog is at his happiest
             int health = 8;//low health level (0) means dog has no energy, and 10 means dog is full of energy
+            int countInteraction = 0;
 
         mainMenu:
             //consequences logic for neglect - too hungry, no rest, too unhappy
@@ -57,6 +58,15 @@ namespace Assignment1
             if (happiness >= 9) Console.WriteLine("NOTICE: {0} is extremely happy and energetic!", petName);
             if (health >= 9) Console.WriteLine("NOTICE: {0} is in excellent health!", petName);
             Console.WriteLine();
+
+            //time-based change - simulate the passage of time where each action represents passage of 1 hr
+            if (countInteraction % 3 == 0 && countInteraction >= 3)
+            {
+                Console.WriteLine("Your pet has been active for 3 hours. Hunger increases over time, and happiness decreases slightly.");
+                if (hunger <= 10) hunger--;
+                if (health <= 10) health--;
+                if (happiness <= 10) happiness--;
+            }
 
             //display main menu
             Console.WriteLine("Main Menu:\n1. Feed " + petName + ".\n2. Play with " + petName + ".\n3. Let " + petName + " Rest.\n4. Check " + petName + "'s Status\n5. Exit");
@@ -74,6 +84,7 @@ namespace Assignment1
                     Console.WriteLine("You fed {0}. His hunger decreases, and health improves slightly.", petName);
                     if (hunger < 10) hunger++;
                     if (health < 10) health++;
+                    countInteraction++;//feeding counts as 1 interaction
                     goto mainMenu;
                 case 2:
                     if (hunger <= 1)
@@ -86,11 +97,13 @@ namespace Assignment1
                         if (happiness < 10) happiness++;
                         if (hunger > 0) hunger--;
                     }
+                    countInteraction++;//playing counts as 1 interaction
                     goto mainMenu;
                 case 3:
                     Console.WriteLine("Let {0} rest. His health improves, and happiness decreases slightly", petName);
                     if (health < 10) health++;
                     if (happiness > 0) happiness--;
+                    countInteraction++;//Resting counts as 1 interaction
                     goto mainMenu;
                 case 4:
                     Console.WriteLine("{0}'s Status:\n- Hunger: {1}\n- Happiness: {2}\n -Health: {3}\n", petName, hunger, happiness, health);
@@ -102,8 +115,6 @@ namespace Assignment1
                     Console.WriteLine("Please select valid option from the menu. ");
                     goto mainMenu;
             }
-
-            //time-based change - simulate the passage of time where each action represents passage of 1 hr
         }
     }
 }
